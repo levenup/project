@@ -8,9 +8,9 @@ root=$(pwd)
 # Whether to run the command in a verbose mode
 [[ "$*" =~ '-v' ]] && v="/dev/stdout" || v="/dev/null"
 
-git checkout https://github.com/levenup/tools.git >$v
-git checkout https://github.com/levenup/frontend.git >$v
-git checkout https://github.com/levenup/backend.git >$v
+git clone https://github.com/levenup/tools.git >$v
+git clone https://github.com/levenup/frontend.git >$v
+git clone https://github.com/levenup/backend.git >$v
 
 cd frontend/mobile
 
