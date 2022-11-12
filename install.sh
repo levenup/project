@@ -110,7 +110,7 @@ echo
 
 [[ -d "./tools" ]] || {
     echo "> Clone Tools..."
-        git clone git@github.com:levenup/tools.git &> $v || {
+        git clone https://github.com/levenup/tools.git &> $v || {
         echo
         echo "something went wrong!"
         exit 1;
@@ -118,7 +118,7 @@ echo
 }
 [[ -d "./frontend" ]] || {
     echo "> Clone Frontend..."
-        git clone git@github.com:levenup/frontend.git &> $v || {
+        git clone https://github.com/levenup/frontend.git &> $v || {
         echo
         echo "something went wrong!"
         exit 1;
@@ -126,7 +126,7 @@ echo
 }
 [[ -d "./backend" ]] || {
     echo "> Clone Backend..."
-        git clone git@github.com:levenup/backend.git &> $v || {
+        git clone https://github.com/levenup/backend.git &> $v || {
         echo
         echo "something went wrong!"
         exit 1;
