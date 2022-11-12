@@ -25,6 +25,7 @@ if ! levenup -v &> /dev/null
 then
     if ! grep -q "LU_ROOT=.*" ~/.bashrc
     then
+        echo "> Saving profile..."
         echo "export LU_ROOT=$root" >> ~/.bashrc 
         echo "source $root/tools/commands.sh" >> ~/.bashrc 
         echo "export LU_ROOT=$root" >> ~/.zshrc 
@@ -32,8 +33,9 @@ then
     fi
 fi
 
-source ~/.bashrc &> /dev/null
-source ~/.zshrc &> /dev/null
+echo "> Sourcing profile..."
+. ~/.bashrc &> /dev/null
+. ~/.zshrc &> /dev/null
 
 if ! [[ -d .git ]]
 then
