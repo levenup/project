@@ -22,7 +22,7 @@ echo """
                                                                
 """
 
-if $isCi
+if [[ $isCi == true ]]
 then
     echo "> Making root $root/ci"
     root="$root/ci"
