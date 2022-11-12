@@ -50,12 +50,8 @@ echo "✔"
 
 if [[ ! -d ".git" ]]
 then
-    printf "> Initialising Git..."
-    git init &> $v || {
-        echo
-        echo "something went wrong!"
-        exit 1;
-    }
+    echo "> Initialising Git..."
+    git init
     echo "✔"
 
     while [[ -z $firstname ]]
