@@ -28,6 +28,7 @@ then
     echo "> Making root $root/ci"
     root="$root/ci"
     mkdir $root &> /dev/null
+    email="tech.team@levenup.com"
     cd $root
 fi
 
@@ -55,10 +56,10 @@ then
     do
         read  -r -p  ". Please introduce your @levenup address: " email
     done
-    firstname=$(sed -n "s/^(\w)+\." <<< $email)
+    firstname=$(echo $email | sed -En "s/^(\w)+\./\1/p")
     firstnameC=$(echo $firstname | cut -c1 | tr "[:lower:]" "[:upper:]")$(echo $firstname | cut -c2-)
     firstnameL=$(echo "$firstname" | tr '[:upper:]' '[:lower:]')
-    surname=$(sed -n "s/^.*\.(\w)+\@" <<< $email)
+    surname=$(echo $email | sed -En "s/^.*\.(\w)+\@/\1/p")
     surnameL=$(echo "$surname" | tr '[:upper:]' '[:lower:]')
     surnameU=$(echo "$surname" | tr '[:lower:]' '[:upper:]')
 
