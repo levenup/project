@@ -22,10 +22,12 @@ echo """
                                                                
 """
 
-if isCi
+if $isCi
 then
     echo "> Moving root to $root/lu"
     root="$root/lu"
+    mkdir $root &> /dev/null
+    cd $root
 fi
 
 if ! levenup -v &> /dev/null
