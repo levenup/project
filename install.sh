@@ -82,6 +82,7 @@ echo
     REINSTALL=true
     LUENV=dev
 } || {
+    REINSTALL=false
     while ! [[ $fresh =~ ^YES|Yes|y|NO|No|n$ ]]
     do
         read  -r -p  "Re-install? (y|n) " fresh
