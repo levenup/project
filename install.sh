@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 set -e
 set -o pipefail
 # Needed because if it is set, cd may print the path it changed to.
