@@ -32,8 +32,8 @@ then
     fi
 fi
 
-source ~/.bashrc &> dev/null
-source ~/.zshrc &> dev/null
+source ~/.bashrc &> /dev/null
+source ~/.zshrc &> /dev/null
 
 if ! [[ -d .git ]]
 then
