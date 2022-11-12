@@ -7,7 +7,8 @@ unset CDPATH
 root=$(pwd)
 
 # Whether to run the command in a verbose mode
-[[ "$*" =~ '---verboseerbose' ]] && v="/dev/stdout" || v="/dev/null"
+[[ "$*" =~ '--verbose' ]] && v="/dev/stdout" || v="/dev/null"
+[[ "$*" =~ '--ci' ]] && isCi=true || isCi=false
 
 echo """
  _        _______           _______  _                 _______ 
@@ -21,25 +22,31 @@ echo """
                                                                
 """
 
+if isCi
+then
+    echo "> Moving root to $root/lu"
+    root="$root/lu"
+fi
+
 if ! levenup -v &> /dev/null
 then
     if ! grep -q "LU_ROOT=.*" ~/.bashrc
     then
-        echo "> Saving profile..."
+        printf "> Saving profile..."
         echo "export LU_ROOT=$root" >> ~/.bashrc 
         echo "source $root/tools/commands.sh" >> ~/.bashrc 
         echo "export LU_ROOT=$root" >> ~/.zshrc 
         echo "source $root/tools/commands.sh" >> ~/.zshrc 
+        echo "✔"
     fi
 fi
 
-echo $(ls)
-echo $(pwd)
-echo "> Sourcing profile..."
+printf "> Sourcing profile..."
 . ~/.bashrc &> /dev/null
 . ~/.zshrc &> /dev/null
+echo "✔"
 
-if ! [[ -d .git ]]
+if [[ ! -d ".git" ]]
 then
     printf "> Initialising Git..."
     git init &> $v || {
