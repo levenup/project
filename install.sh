@@ -29,10 +29,11 @@ then
         echo "source $root/tools/commands.sh" >> ~/.bashrc 
         echo "export LU_ROOT=$root" >> ~/.zshrc 
         echo "source $root/tools/commands.sh" >> ~/.zshrc 
-        . ~/.bashrc
-        . ~/.zshrc
     fi
 fi
+
+. ~/.bashrc
+. ~/.zshrc
 
 if ! [[ -d .git ]]
 then
