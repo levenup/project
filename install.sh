@@ -24,6 +24,7 @@ echo """
 
 if [[ $isCi == true ]]
 then
+    v="/dev/stdout"
     echo "> Making root $root/ci"
     root="$root/ci"
     mkdir $root &> /dev/null
@@ -50,34 +51,29 @@ echo "✔"
 
 if [[ ! -d ".git" ]]
 then
-    echo "> Initialising Git..."
-    git init
-    echo "✔"
-
-    while [[ -z $firstname ]]
+    while [[ -z $email ]]
     do
-        read  -r -p  ". Please introduce your firstname: " firstname
+        read  -r -p  ". Please introduce your @levenup address: " email
     done
-    while [[ -z $surname ]]
-    do
-        read  -r -p  ". Please introduce your surname: " surname
-    done
+    firstname=$(sed -n "s/^(\w)+\." <<< $email)
+    firstnameC=$(echo $firstname | cut -c1 | tr "[:lower:]" "[:upper:]")$(echo $firstname | cut -c2-)
+    firstnameL=$(echo "$firstname" | tr '[:upper:]' '[:lower:]')
+    surname=$(sed -n "s/^.*\.(\w)+\@" <<< $email)
     surnameL=$(echo "$surname" | tr '[:upper:]' '[:lower:]')
     surnameU=$(echo "$surname" | tr '[:lower:]' '[:upper:]')
-    while ! [[ $correct =~ ^YES|Yes|y|NO|No|n$ ]]
-    do
-        read  -r -p  ". Is $firstname.$surnameL@levenup.com correct? (y|n) " correct
-    done
-    if [[ $correct =~ ^Yes|YES|y$ ]]
-    then
-        email="$firsname.$surnameL@levenup.com"
-    else
-        read  -r -p  ". Please introduce your @levenup email address: " email
-    fi
-    fullname="$firstname $surnameU"
 
-    git config --local --replace-all user.name $fullname
-    git config --local --replace-all user.email $email
+    fullname="$firstnameC $surnameU"
+
+    printf "> Initialising Git..."
+    git init &> $v || {
+        echo
+        echo "something went wrong!"
+        exit 1;
+    }
+    echo "✔"
+
+    git config --local user.name "$fullname"
+    git config --local user.email "$email"
 else 
     fullname=$(git config --local user.name)
 fi
