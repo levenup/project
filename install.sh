@@ -24,8 +24,8 @@ echo """
 
 if $isCi
 then
-    echo "> Moving root to $root/lu"
-    root="$root/lu"
+    echo "> Making root $root/ci"
+    root="$root/ci"
     mkdir $root &> /dev/null
     cd $root
 fi
