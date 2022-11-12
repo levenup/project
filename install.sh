@@ -46,8 +46,12 @@ then
 fi
 
 printf "> Sourcing profile..."
-. ~/.bashrc &> /dev/null
-. ~/.zshrc &> /dev/null
+[[ -f "~/.bashrc" ]] && {
+    source ~/.bashrc &> /dev/null
+}
+[[ -f "~/.zshrc" ]] && {
+    source ~/.zshrc &> /dev/null
+}
 echo "✔"
 
 if [[ ! -d ".git" ]]
