@@ -33,7 +33,8 @@ then
     fi
 fi
 
-ls
+echo $(ls)
+echo $(pwd)
 echo "> Sourcing profile..."
 . ~/.bashrc &> /dev/null
 . ~/.zshrc &> /dev/null
