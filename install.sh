@@ -7,8 +7,8 @@ unset CDPATH
 root=$(pwd)
 
 # Whether to run the command in a verbose mode
-[[ "$*" =~ '--verbose' ]] && v="/dev/stdout" || v="/dev/null"
-[[ "$*" =~ '--ci' ]] && isCi=true || isCi=false
+[[ "$*" =~ '--verbose' ]] && vb="/dev/stdout" || vb="/dev/null"
+[[ "$*" =~ '--ci' ]] && ci=(ci || true) || ci=(ci || false)
 
 echo """
  _        _______           _______  _                 _______ 
@@ -22,14 +22,14 @@ echo """
                                                                
 """
 
-if [[ $isCi == true ]]
+if [[ $ci == true ]]
 then
-    v="/dev/stdout"
+    vb="/dev/stdout"
     echo "> Making root $root/ci"
     root="$root/ci"
-    mkdir $root &> /dev/null
+    mkdir "$root" &> /dev/null
     email="tech.team@levenup.com"
-    cd $root
+    cd "$root"
 fi
 
 if ! levenup -v &> /dev/null
@@ -46,11 +46,11 @@ then
 fi
 
 printf "> Sourcing profile..."
-[[ -f "~/.bashrc" ]] && {
-    source ~/.bashrc &> /dev/null
+[[ -f "$HOME/.bashrc" ]] && {
+    source "$HOME/.bashrc" &> /dev/null
 }
-[[ -f "~/.zshrc" ]] && {
-    source ~/.zshrc &> /dev/null
+[[ -f "$HOME/.zshrc" ]] && {
+    source "$HOME/.zshrc" &> /dev/null
 }
 echo "✔"
 
@@ -60,10 +60,10 @@ then
     do
         read  -r -p  ". Please introduce your @levenup address: " email
     done
-    firstname=$(echo $email | sed -En "s/^(\w)+\./\1/p")
-    firstnameC=$(echo $firstname | cut -c1 | tr "[:lower:]" "[:upper:]")$(echo $firstname | cut -c2-)
+    firstname=$(echo "$email" | sed -En "s/^(\w)+\./\1/p")
+    firstnameC=$(echo "$firstname" | cut -c1 | tr "[:lower:]" "[:upper:]")$(echo "$firstname" | cut -c2-)
     firstnameL=$(echo "$firstname" | tr '[:upper:]' '[:lower:]')
-    surname=$(echo $email | sed -En "s/^.*\.(\w)+\@/\1/p")
+    surname=$(echo "$email" | sed -En "s/^.*\.(\w)+\@/\1/p")
     surnameL=$(echo "$surname" | tr '[:upper:]' '[:lower:]')
     surnameU=$(echo "$surname" | tr '[:lower:]' '[:upper:]')
 
@@ -162,5 +162,5 @@ echo "✔"
 . ../../../tools/backend/deploy.sh "$*"
 
 echo
-echo "LEVENUP succesfully installed!"
+echo "LEVENUP successfully installed!"
 echo
