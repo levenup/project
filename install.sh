@@ -4,11 +4,11 @@ set -o pipefail
 # Needed because if it is set, cd may print the path it changed to.
 unset CDPATH
 
-root=$(pwd)
+root="$(pwd)"
 
 # Whether to run the command in a verbose mode
 [[ "$*" =~ '--verbose' ]] && vb="/dev/stdout" || vb="/dev/null"
-[[ "$*" =~ '--ci' ]] && ci=(ci || true) || ci=(ci || false)
+[[ -z "$ci" && "$*" =~ '--ci' ]] && ci=true || ci=false
 
 echo """
  _        _______           _______  _                 _______ 
@@ -32,27 +32,20 @@ then
     cd "$root"
 fi
 
+export LU_ROOT=$root
+
 if ! levenup -v &> /dev/null
 then
     if ! grep -q "LU_ROOT=.*" ~/.bashrc
     then
         printf "> Saving profile..."
         echo "export LU_ROOT=$root" >> ~/.bashrc 
-        echo "source $root/tools/commands.sh" >> ~/.bashrc 
+        echo "source $root/tools/commands.sh" >> ~/.bashrc
         echo "export LU_ROOT=$root" >> ~/.zshrc 
-        echo "source $root/tools/commands.sh" >> ~/.zshrc 
+        echo "source $root/tools/commands.sh" >> ~/.zshrc
         echo "✔"
     fi
 fi
-
-printf "> Sourcing profile..."
-[[ -f "$HOME/.bashrc" ]] && {
-    source "$HOME/.bashrc" &> /dev/null
-}
-[[ -f "$HOME/.zshrc" ]] && {
-    source "$HOME/.zshrc" &> /dev/null
-}
-echo "✔"
 
 if [[ ! -d ".git" ]]
 then
@@ -70,7 +63,7 @@ then
     fullname="$firstnameC $surnameU"
 
     printf "> Initialising Git..."
-    git init &> $v || {
+    git init &> $vb || {
         echo
         echo "something went wrong!"
         exit 1;
@@ -110,7 +103,7 @@ echo
 
 [[ -d "./tools" ]] || {
     echo "> Clone Tools..."
-        git clone https://github.com/levenup/tools.git &> $v || {
+        git clone https://github.com/levenup/tools.git &> $vb || {
         echo
         echo "something went wrong!"
         exit 1;
@@ -118,7 +111,7 @@ echo
 }
 [[ -d "./frontend" ]] || {
     echo "> Clone Frontend..."
-        git clone https://github.com/levenup/frontend.git &> $v || {
+        git clone https://github.com/levenup/frontend.git &> $vb || {
         echo
         echo "something went wrong!"
         exit 1;
@@ -126,7 +119,7 @@ echo
 }
 [[ -d "./backend" ]] || {
     echo "> Clone Backend..."
-        git clone https://github.com/levenup/backend.git &> $v || {
+        git clone https://github.com/levenup/backend.git &> $vb || {
         echo
         echo "something went wrong!"
         exit 1;
@@ -137,21 +130,21 @@ echo
 printf "> Moving to /mobile..."
 cd frontend/mobile
 echo "✔"
-. ../../tools/setup_environment.sh "$*"
+. ../../tools/setup_environment.sh "$@"
 
 echo 
 printf "> Moving to /firebase..."
 cd ../../
 cd backend/firebase
 echo "✔"
-. ../../tools/backend/emulator/setup.sh "$*"
+. ../../tools/backend/emulator/setup.sh "$@"
 
 echo 
 printf "> Moving to /mobile..."
 cd ../../../
 cd frontend/mobile
 echo "✔"
-. ../../tools/setup_mobile.sh "$*"
+. ../../tools/setup_mobile.sh "$@"
 
 
 echo 
@@ -159,7 +152,16 @@ printf "> Moving to /emulator..."
 cd ../../
 cd backend/firebase/emulator
 echo "✔"
-. ../../../tools/backend/deploy.sh "$*"
+. ../../../tools/backend/deploy.sh "$@"
+
+printf "> Sourcing profile..."
+[[ -f "$HOME/.bashrc" ]] && {
+    source "$HOME/.bashrc" &> /dev/null
+}
+[[ -f "$HOME/.zshrc" ]] && {
+    source "$HOME/.zshrc" &> /dev/null
+}
+echo "✔"
 
 echo
 echo "LEVENUP successfully installed!"
