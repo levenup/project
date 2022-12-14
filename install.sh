@@ -25,11 +25,6 @@ echo """
 if [[ $ci == true ]]
 then
     vb="/dev/stdout"
-    echo "> Making root $root/ci"
-    root="$root/ci"
-    mkdir "$root" &> /dev/null
-    email="tech.team@levenup.com"
-    cd "$root"
 fi
 
 export LU_ROOT=$root
@@ -101,33 +96,53 @@ echo
     }
 }
 
-[[ -d "./tools" ]] || {
-    echo "> Clone Tools..."
-        git clone https://github.com/levenup/tools.git &> $vb || {
-        echo
-        echo "something went wrong!"
-        exit 1;
-    }
-}
-[[ -d "./frontend" ]] || {
-    echo "> Clone Frontend..."
-        git clone https://github.com/levenup/frontend.git &> $vb || {
-        echo
-        echo "something went wrong!"
-        exit 1;
-    }
-}
-[[ -d "./backend" ]] || {
-    echo "> Clone Backend..."
-        git clone https://github.com/levenup/backend.git &> $vb || {
-        echo
-        echo "something went wrong!"
-        exit 1;
-    }
-}
 
 if [[ $REINSTALL == true ]]
 then
+  echo
+  echo "> Installing initial dependencies..."
+  echo
+  printf "@ Homebrew..."
+  brew update &> $vb || {
+      /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" &> $vb || {
+          echo
+          echo "something went wrong! [Homebrew]"
+          exit 1;
+      }
+  } &> $vb
+  echo "✔"
+
+  printf "@ Github CLI..."
+  brew install gh &> $vb
+  echo "✔"
+
+  gh auth login -w -p https
+
+  [[ -d "./tools" ]] || {
+      echo "> Clone Tools..."
+          gh repo clone levenup/tools &> $vb || {
+          echo
+          echo "something went wrong!"
+          exit 1;
+      }
+  }
+  [[ -d "./frontend" ]] || {
+      echo "> Clone Frontend..."
+          gh repo clone levenup/frontend &> $vb || {
+          echo
+          echo "something went wrong!"
+          exit 1;
+      }
+  }
+  [[ -d "./backend" ]] || {
+      echo "> Clone Backend..."
+          gh repo clone levenup/backend &> $vb || {
+          echo
+          echo "something went wrong!"
+          exit 1;
+      }
+  }
+
   echo
   printf "> Moving to /mobile..."
   cd frontend/mobile
