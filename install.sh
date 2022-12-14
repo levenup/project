@@ -126,11 +126,14 @@ echo
     }
 }
 
-echo 
-printf "> Moving to /mobile..."
-cd frontend/mobile
-echo "✔"
-. ../../tools/setup_environment.sh "$@"
+if [[ $REINSTALL == true ]]
+then
+  echo
+  printf "> Moving to /mobile..."
+  cd frontend/mobile
+  echo "✔"
+  . ../../tools/setup_environment.sh "$@"
+fi
 
 echo 
 printf "> Moving to /firebase..."
